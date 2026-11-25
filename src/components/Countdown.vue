@@ -305,6 +305,13 @@ onBeforeUnmount(() => {
       >
         {{ days }}-Hari, {{ hours }}-jam, {{ seconds }}-detik
       </h1>
+
+      <!-- Kalimat di Bawah Countdown: Font & Warna Sama (Romance Delighter & text-rose-500), Ukuran Kecil -->
+      <p
+        class="font-romance mt-4 sm:mt-6 text-lg sm:text-xl md:text-2xl tracking-wide text-rose-500 drop-shadow-xs transition-colors duration-200 group-hover:text-rose-600"
+      >
+        Mohon ditunggu yaa sayangkuu
+      </p>
     </div>
   </div>
 </template>
