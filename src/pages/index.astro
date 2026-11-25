@@ -2,11 +2,15 @@
 import Layout from '@/layouts/Layout.astro';
 import ThreeCanvas from '@/components/ThreeCanvas.vue';
 import Countdown from '@/components/Countdown.vue';
+import HeartBorder from '@/components/HeartBorder.vue';
 import '@/styles/global.css';
 ---
 
-<Layout title="Counting Down to December 5th ❤️">
+<Layout title="My Dedicated Website For You">
   <main class="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
+    <!-- Frame Border 4 Sisi Berjalan (Pola Love Ribbon) -->
+    <HeartBorder client:load />
+
     <!-- 2D Love Particles Animated Background -->
     <ThreeCanvas client:load />
 

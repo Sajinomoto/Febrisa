@@ -116,7 +116,6 @@ function renderBurstLoop() {
     const p = burstParticles[i];
     p.life++;
 
-    // Physics
     p.vx *= p.drag;
     p.vy = p.vy * p.drag + p.gravity;
     p.x += p.vx + Math.sin(p.life * p.wobbleSpeed) * p.wobbleDistance;
@@ -129,13 +128,11 @@ function renderBurstLoop() {
       continue;
     }
 
-    // Alpha curve: pop in instantly, float, then fade softly
     let alpha = 1;
     if (progress > 0.6) {
       alpha = 1 - (progress - 0.6) / 0.4;
     }
 
-    // Scale curve: scale up quickly with slight elasticity then settle
     let currentScale = 1;
     if (progress < 0.15) {
       currentScale = (progress / 0.15) * 1.25;
@@ -149,7 +146,6 @@ function renderBurstLoop() {
     ctx.globalAlpha = Math.max(0, Math.min(alpha, 1));
     ctx.fillStyle = p.color;
 
-    // Tambah subtle glow aura untuk partikel
     ctx.shadowColor = p.color;
     ctx.shadowBlur = 10;
 
@@ -178,7 +174,7 @@ function renderBurstLoop() {
 function handleClick(event: MouseEvent) {
   if (!countdownWrapperRef.value || !burstCanvasRef.value) return;
 
-  // 1. Text elastic bounce animation
+  // Text bounce animation
   gsap.killTweensOf(countdownWrapperRef.value);
   gsap.timeline()
     .to(countdownWrapperRef.value, {
@@ -197,13 +193,12 @@ function handleClick(event: MouseEvent) {
       ease: 'power2.out',
     });
 
-  // 2. Ambil koordinat klik relatif ke canvas overlay
   const canvas = burstCanvasRef.value;
   const rect = canvas.getBoundingClientRect();
   const originX = event.clientX - rect.left;
   const originY = event.clientY - rect.top;
 
-  // Expanding shockwave glow rings
+  // Shockwave glow rings
   for (let r = 0; r < 2; r++) {
     burstParticles.push({
       type: 'ring',
@@ -224,12 +219,11 @@ function handleClick(event: MouseEvent) {
     });
   }
 
-  // Multi-directional burst: Hearts & Golden/Pink Sparkles
-  const totalCount = 36; // jumlah melimpah dan meriah
+  // Multi-directional burst: Hearts & Sparkles
+  const totalCount = 36;
   for (let i = 0; i < totalCount; i++) {
     const isSparkle = Math.random() < 0.35;
     const angle = Math.random() * Math.PI * 2;
-    // Variasi kecepatan: ada yang melesat jauh, ada yang mengapung dekat
     const speed = 3 + Math.random() * 8.5;
 
     burstParticles.push({
@@ -237,15 +231,15 @@ function handleClick(event: MouseEvent) {
       x: originX + (Math.random() - 0.5) * 16,
       y: originY + (Math.random() - 0.5) * 16,
       vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed - (isSparkle ? 1.5 : 3.5), // sedikit dorongan ke atas
-      gravity: isSparkle ? 0.08 : 0.15, // gravitasi alami
-      drag: 0.94, // gesekan udara yang mulus
+      vy: Math.sin(angle) * speed - (isSparkle ? 1.5 : 3.5),
+      gravity: isSparkle ? 0.08 : 0.15,
+      drag: 0.94,
       size: isSparkle ? 4 + Math.random() * 5 : 7 + Math.random() * 9,
       color: vibrantColors[Math.floor(Math.random() * vibrantColors.length)],
       rotation: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.14,
       life: 0,
-      maxLife: 45 + Math.random() * 40, // durasi hidup dinamis
+      maxLife: 45 + Math.random() * 40,
       wobbleSpeed: 0.08 + Math.random() * 0.1,
       wobbleDistance: (Math.random() - 0.5) * 0.8,
     });
@@ -286,7 +280,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 select-none">
-    <!-- Fullscreen Burst Canvas Overlay (Glowing Hearts, Sparkles, Shockwaves) -->
+    <!-- Fullscreen Burst Canvas Overlay -->
     <canvas
       ref="burstCanvasRef"
       class="pointer-events-none fixed inset-0 z-20 h-full w-full"
@@ -311,13 +305,6 @@ onBeforeUnmount(() => {
       >
         {{ days }}-Hari, {{ hours }}-jam, {{ seconds }}-detik
       </h1>
-
-      <!-- Kalimat Pesan -->
-      <p
-        class="font-onigiri mt-10 sm:mt-14 text-lg font-semibold text-rose-500 tracking-wide drop-shadow-xs transition-colors duration-200 group-hover:text-rose-600"
-      >
-        Mohon ditunggu yaa sayangkuuuu :D
-      </p>
     </div>
   </div>
 </template>
