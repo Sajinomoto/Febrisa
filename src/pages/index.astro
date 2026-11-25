@@ -1,31 +1,16 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import ThreeCanvas from '@/components/ThreeCanvas.vue';
-import HeroSection from '@/components/HeroSection.vue';
-import StoryTimeline from '@/components/StoryTimeline.vue';
-import LoveLetter from '@/components/LoveLetter.vue';
+import Countdown from '@/components/Countdown.vue';
 import '@/styles/global.css';
 ---
 
-<Layout title="For My Love ❤️">
-  <main class="relative min-h-screen w-full overflow-hidden">
-    <!-- 3D Three.js Background (Interactive floating particles/hearts) -->
-    <ThreeCanvas client:idle />
+<Layout title="Counting Down to December 5th ❤️">
+  <main class="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
+    <!-- 2D Love Particles Animated Background -->
+    <ThreeCanvas client:load />
 
-    <!-- Hero Section -->
-    <HeroSection client:load />
-
-    <!-- Timeline Perjalanan Cerita Cinta -->
-    <StoryTimeline client:visible />
-
-    <!-- Surat Cinta Interaktif -->
-    <LoveLetter client:visible />
-
-    <!-- Footer -->
-    <footer class="relative z-10 py-12 text-center text-xs text-slate-400">
-      <p class="flex items-center justify-center gap-1.5">
-        Dibuat dengan sepenuh hati untuk pacarku tercinta ✨
-      </p>
-    </footer>
+    <!-- Countdown Center -->
+    <Countdown client:load />
   </main>
 </Layout>

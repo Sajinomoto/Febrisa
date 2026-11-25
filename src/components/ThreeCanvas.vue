@@ -1,117 +1,148 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import * as THREE from 'three';
 
-const containerRef = ref<HTMLDivElement | null>(null);
-
-let renderer: THREE.WebGLRenderer | null = null;
-let scene: THREE.Scene | null = null;
-let camera: THREE.PerspectiveCamera | null = null;
+const canvasRef = ref<HTMLCanvasElement | null>(null);
 let animationFrameId: number | null = null;
 
+interface HeartParticle {
+  x: number;
+  y: number;
+  size: number;
+  color: string;
+  rotation: number;
+  rotSpeed: number;
+  vx: number;
+  vy: number;
+  life: number;        // progress 0 -> 1
+  duration: number;    // detik (2 - 5s)
+}
+
 onMounted(() => {
-  if (!containerRef.value) return;
+  const canvas = canvasRef.value;
+  if (!canvas) return;
 
-  const container = containerRef.value;
-  const width = container.clientWidth;
-  const height = container.clientHeight;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
-  // Scene
-  scene = new THREE.Scene();
+  let width = (canvas.width = window.innerWidth);
+  let height = (canvas.height = window.innerHeight);
 
-  // Camera
-  camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-  camera.position.z = 25;
-
-  // Renderer with low-power & high performance setup for mobile
-  renderer = new THREE.WebGLRenderer({
-    alpha: true,
-    antialias: window.devicePixelRatio < 2, // disable heavy antialiasing on retina/high-dpi phones
-    powerPreference: 'high-performance',
-  });
-  renderer.setSize(width, height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  container.appendChild(renderer.domElement);
-
-  // Particles (floating glowing orbs/hearts)
-  const particleCount = window.innerWidth < 768 ? 120 : 300;
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(particleCount * 3);
-  const colors = new Float32Array(particleCount * 3);
-
-  const colorOptions = [
-    new THREE.Color('#f43f5e'), // rose
-    new THREE.Color('#ec4899'), // pink
-    new THREE.Color('#fb7185'), // light rose
-    new THREE.Color('#fda4af'), // pale rose
+  // Palet warna variatif pastel & romantis
+  const colorPalette = [
+    'rgba(244, 63, 94, ',   // rose-500
+    'rgba(236, 72, 153, ',  // pink-500
+    'rgba(251, 113, 133, ', // rose-400
+    'rgba(244, 114, 182, ', // pink-400
+    'rgba(168, 85, 247, ',  // purple-500
+    'rgba(192, 132, 252, ', // purple-400
+    'rgba(253, 164, 175, ', // rose-300
+    'rgba(249, 168, 212, ', // pink-300
   ];
 
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 50;
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 30;
+  function drawHeart(
+    context: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    size: number,
+    rotation: number,
+    colorBase: string,
+    opacity: number
+  ) {
+    context.save();
+    context.translate(x, y);
+    context.rotate(rotation);
+    context.scale(size, size);
 
-    const chosenColor = colorOptions[Math.floor(Math.random() * colorOptions.length)];
-    colors[i * 3] = chosenColor.r;
-    colors[i * 3 + 1] = chosenColor.g;
-    colors[i * 3 + 2] = chosenColor.b;
+    context.beginPath();
+    context.moveTo(0, 0);
+    context.bezierCurveTo(-15, -15, -25, 5, 0, 25);
+    context.bezierCurveTo(25, 5, 15, -15, 0, 0);
+
+    context.fillStyle = colorBase + opacity + ')';
+    context.fill();
+    context.restore();
   }
 
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  // Populasi love dikurangi agar tidak terlalu ramai (20 untuk mobile, 38 untuk desktop)
+  const targetCount = window.innerWidth < 768 ? 20 : 38;
+  const particles: HeartParticle[] = [];
 
-  // Point Material
-  const material = new THREE.PointsMaterial({
-    size: 0.6,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0.8,
-    blending: THREE.AdditiveBlending,
+  function createHeart(spawnRandomLife = false): HeartParticle {
+    const duration = 2 + Math.random() * 3; // 2 sampai 5 detik
+    return {
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: 0.35 + Math.random() * 0.65,
+      color: colorPalette[Math.floor(Math.random() * colorPalette.length)],
+      rotation: (Math.random() - 0.5) * 0.5,
+      rotSpeed: (Math.random() - 0.5) * 0.012,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: -0.25 - Math.random() * 0.45,
+      life: spawnRandomLife ? Math.random() : 0,
+      duration: duration,
+    };
+  }
+
+  for (let i = 0; i < targetCount; i++) {
+    particles.push(createHeart(true));
+  }
+
+  let lastTime = performance.now();
+
+  const render = (time: number) => {
+    animationFrameId = requestAnimationFrame(render);
+    const dt = (time - lastTime) / 1000;
+    lastTime = time;
+
+    ctx.clearRect(0, 0, width, height);
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+
+      p.life += dt / p.duration;
+
+      if (p.life >= 1) {
+        particles[i] = createHeart(false);
+        continue;
+      }
+
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotation += p.rotSpeed;
+
+      let alpha = 1;
+      if (p.life < 0.2) {
+        alpha = p.life / 0.2;
+      } else if (p.life > 0.8) {
+        alpha = (1 - p.life) / 0.2;
+      }
+
+      const scaleEffect = p.size * (0.85 + 0.15 * Math.sin(p.life * Math.PI));
+
+      drawHeart(ctx, p.x, p.y, scaleEffect, p.rotation, p.color, Math.max(0, Math.min(alpha * 0.7, 1)));
+    }
+  };
+
+  animationFrameId = requestAnimationFrame((t) => {
+    lastTime = t;
+    render(t);
   });
 
-  const particleSystem = new THREE.Points(geometry, material);
-  scene.add(particleSystem);
-
-  // Responsive resize
   const onResize = () => {
-    if (!container || !renderer || !camera) return;
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    if (!canvas) return;
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
   };
 
   window.addEventListener('resize', onResize);
 
-  // Animation Loop with low overhead
-  let clock = new THREE.Clock();
-  const animate = () => {
-    animationFrameId = requestAnimationFrame(animate);
-    const elapsedTime = clock.getElapsedTime();
-
-    particleSystem.rotation.y = elapsedTime * 0.05;
-    particleSystem.rotation.x = Math.sin(elapsedTime * 0.03) * 0.1;
-
-    renderer?.render(scene!, camera!);
-  };
-
-  animate();
-
   onBeforeUnmount(() => {
     if (animationFrameId !== null) cancelAnimationFrame(animationFrameId);
     window.removeEventListener('resize', onResize);
-    geometry.dispose();
-    material.dispose();
-    renderer?.dispose();
-    if (container && renderer?.domElement) {
-      container.removeChild(renderer.domElement);
-    }
   });
 });
 </script>
 
 <template>
-  <div ref="containerRef" class="pointer-events-none absolute inset-0 z-0 overflow-hidden"></div>
+  <canvas ref="canvasRef" class="pointer-events-none fixed inset-0 z-0 h-full w-full"></canvas>
 </template>
