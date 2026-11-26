@@ -290,25 +290,25 @@ onBeforeUnmount(() => {
     <div
       ref="countdownWrapperRef"
       @click="handleClick"
-      class="relative z-10 text-center cursor-pointer transition-transform group py-4 px-6 rounded-3xl"
+      class="relative z-10 text-center cursor-pointer transition-transform group py-4 px-2 sm:px-6 rounded-3xl"
     >
       <!-- Dedikasi di Atas Countdown -->
       <p
-        class="font-romance text-3xl sm:text-4xl md:text-5xl tracking-wide text-rose-500 drop-shadow-sm mb-2 transition-colors duration-200 group-hover:text-rose-600"
+        class="font-romance font-bold text-2xl sm:text-4xl md:text-5xl tracking-wide text-rose-500 drop-shadow-sm mb-2 mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-600"
       >
         For my lovely girl, Febri Santi Wulandari
       </p>
 
       <!-- Teks Countdown -->
       <h1
-        class="font-romance text-4xl sm:text-6xl md:text-8xl tracking-wider text-rose-500 drop-shadow-sm transition-colors duration-200 group-hover:text-rose-600 active:scale-95"
+        class="font-romance font-bold text-3xl sm:text-6xl md:text-8xl tracking-wider text-rose-500 drop-shadow-sm mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-600 active:scale-95"
       >
         {{ days }}-Hari, {{ hours }}-jam, {{ seconds }}-detik
       </h1>
 
       <!-- Kalimat di Bawah Countdown: Font & Warna Sama (Romance Delighter & text-rose-500), Ukuran Kecil -->
       <p
-        class="font-romance mt-4 sm:mt-6 text-lg sm:text-xl md:text-2xl tracking-wide text-rose-500 drop-shadow-xs transition-colors duration-200 group-hover:text-rose-600"
+        class="font-romance font-bold mt-4 sm:mt-6 text-base sm:text-xl md:text-2xl tracking-wide text-rose-500 drop-shadow-xs mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-600"
       >
         Mohon ditunggu yaa sayangkuu
       </p>
