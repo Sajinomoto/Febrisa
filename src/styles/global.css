@@ -31,10 +31,10 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --background: 240 20% 4%;
+    --foreground: 0 0% 98%;
+    --card: 240 18% 7%;
+    --card-foreground: 0 0% 98%;
     --primary: 346.8 77.2% 49.8%;
     --primary-foreground: 355.7 100% 97.3%;
     --radius: 0.75rem;
@@ -45,6 +45,8 @@ html, body {
   font-family: 'Onigiri Squishy', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   scroll-behavior: smooth;
   overflow-x: hidden;
+  background-color: #070612;
+  color: #fce7f3;
 }
 
 .font-romance {

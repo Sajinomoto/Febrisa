@@ -73,7 +73,8 @@ const vibrantColors = [
   '#ec4899', // pink-500
   '#f472b6', // pink-400
   '#fbcfe8', // pink-200
-  '#ffedd5', // warm peach glow
+  '#fff1f2', // soft glowing white-rose
+  '#fef08a', // star gold
   '#ffffff', // sparkling white
 ];
 
@@ -147,7 +148,7 @@ function renderBurstLoop() {
     ctx.fillStyle = p.color;
 
     ctx.shadowColor = p.color;
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 12;
 
     if (p.type === 'heart') {
       drawHeartPath(ctx, p.size * currentScale);
@@ -220,9 +221,9 @@ function handleClick(event: MouseEvent) {
   }
 
   // Multi-directional burst: Hearts & Sparkles
-  const totalCount = 36;
+  const totalCount = 38;
   for (let i = 0; i < totalCount; i++) {
-    const isSparkle = Math.random() < 0.35;
+    const isSparkle = Math.random() < 0.38;
     const angle = Math.random() * Math.PI * 2;
     const speed = 3 + Math.random() * 8.5;
 
@@ -292,23 +293,23 @@ onBeforeUnmount(() => {
       @click="handleClick"
       class="relative z-10 text-center cursor-pointer transition-transform group py-4 px-2 sm:px-6 rounded-3xl"
     >
-      <!-- Dedikasi di Atas Countdown -->
+      <!-- Dedikasi di Atas Countdown (Glowing Text Effect) -->
       <p
-        class="font-romance font-bold text-2xl sm:text-4xl md:text-5xl tracking-wide text-rose-500 drop-shadow-sm mb-2 mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-600"
+        class="font-romance font-bold text-2xl sm:text-4xl md:text-5xl tracking-wide text-rose-400 drop-shadow-[0_0_20px_rgba(244,63,94,0.45)] mb-2 mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-300"
       >
         For my lovely girl, Febri Santi Wulandari
       </p>
 
-      <!-- Teks Countdown -->
+      <!-- Teks Countdown (Glowing Text Effect) -->
       <h1
-        class="font-romance font-bold text-3xl sm:text-6xl md:text-8xl tracking-wider text-rose-500 drop-shadow-sm mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-600 active:scale-95"
+        class="font-romance font-bold text-3xl sm:text-6xl md:text-8xl tracking-wider text-rose-400 drop-shadow-[0_0_28px_rgba(244,63,94,0.55)] mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-300 active:scale-95"
       >
         {{ days }}-Hari, {{ hours }}-jam, {{ seconds }}-detik
       </h1>
 
-      <!-- Kalimat di Bawah Countdown: Font & Warna Sama (Romance Delighter & text-rose-500), Ukuran Kecil -->
+      <!-- Kalimat di Bawah Countdown (Diperbesar & Glowing) -->
       <p
-        class="font-romance font-bold mt-4 sm:mt-6 text-base sm:text-xl md:text-2xl tracking-wide text-rose-500 drop-shadow-xs mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-600"
+        class="font-romance font-bold mt-5 sm:mt-8 text-xl sm:text-2xl md:text-3xl tracking-wide text-rose-400 drop-shadow-[0_0_20px_rgba(244,63,94,0.5)] mx-2 sm:mx-0 transition-colors duration-200 group-hover:text-rose-300"
       >
         Mohon ditunggu yaa sayangkuu
       </p>

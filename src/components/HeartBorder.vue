@@ -115,15 +115,24 @@ const tileSet = Array.from({ length: setRepeat }, () => pattern).flat();
 </template>
 
 <style scoped>
-/* Border vertikal (Kanan & Kiri) lembut 80 detik */
+/* Border vertikal: di desktop 80s, di mobile diperlambat menjadi 150s agar sangat santai dan tidak mengganggu mata */
 .marquee-v-to-up {
-  animation: slide-up 80s linear infinite;
+  animation: slide-up 150s linear infinite;
   will-change: transform;
 }
 
 .marquee-v-to-down {
-  animation: slide-down 80s linear infinite;
+  animation: slide-down 150s linear infinite;
   will-change: transform;
+}
+
+@media (min-width: 640px) {
+  .marquee-v-to-up {
+    animation-duration: 80s;
+  }
+  .marquee-v-to-down {
+    animation-duration: 80s;
+  }
 }
 
 @keyframes slide-up {
